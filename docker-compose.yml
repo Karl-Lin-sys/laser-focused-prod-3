@@ -1,0 +1,22 @@
+services:
+  rag-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laser-focused-prod-3:latest
+    container_name: multilingual-rag-gemini
+    # インタラクティブな標準入力を受け付けるための設定
+    stdin_open: true
+    tty: true
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # ChromaDBのテレメトリー送信エラーを回避
+      - ANONYMIZED_TELEMETRY=False
+    volumes:
+      - ./data:/app/data
+      - ./chroma_db:/app/chroma_db
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
