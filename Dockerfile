@@ -4,8 +4,9 @@ FROM python:3.11-slim AS builder
 WORKDIR /build
 
 COPY requirements.txt .
-# 古いノートPCでもビルドが速くなるよう、キャッシュを利用して依存関係をインストール
-RUN pip install --user --no-cache-dir -r requirements.txt
+# pip自体のアップグレードと、ネットワーク遅延によるタイムアウト(ReadTimeoutError)を防ぐための設定追加
+RUN pip install --upgrade pip && \
+    pip install --default-timeout=1000 --user --no-cache-dir -r requirements.txt
 
 FROM python:3.11-slim
 
